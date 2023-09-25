@@ -33,10 +33,7 @@
   }
   
   .ups {
-    font-weight: 700;
-    font-size: 12px;
     line-height: 130%;
-    color: #8f8f8f;
   }
   
   @media (min-width: 580px) {
@@ -45,10 +42,6 @@
       grid-template-areas:
         'img content content'
         'img rating data';
-    }
-  
-    .ups {
-      font-size: 16px;
     }
   
     .up,
