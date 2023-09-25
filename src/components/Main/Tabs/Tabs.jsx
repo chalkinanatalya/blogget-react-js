@@ -3,26 +3,29 @@ import style from './Tabs.module.css';
 import PropTypes from 'prop-types';
 import {assignId} from '../../../utils/generateRandomId';
 import {ReactComponent as ArrowIcon} from './img/arrow.svg';
-import {ReactComponent as EyeIcon} from './img/eye.svg';
 import {ReactComponent as HomeIcon} from './img/home.svg';
-import {ReactComponent as PostIcon} from './img/post.svg';
-import {ReactComponent as SaveIcon} from './img/save.svg';
+import {ReactComponent as TopIcon} from './img/top.svg';
+import {ReactComponent as BestIcon} from './img/best.svg';
+import {ReactComponent as HotIcon} from './img/hot.svg';
 import {debounceRaf} from '../../../utils/debounce';
+import {Text} from '../../../UI/Text/Text';
 
 const LIST = [
-  {value: 'Главная', Icon: EyeIcon},
-  {value: 'Просмотренные', Icon: HomeIcon},
-  {value: 'Сохраненные', Icon: PostIcon},
-  {value: 'Мои посты', Icon: SaveIcon},
+  {value: 'Главная', Icon: HomeIcon},
+  {value: 'Топ', Icon: TopIcon},
+  {value: 'Лучшие', Icon: BestIcon},
+  {value: 'Горячие', Icon: HotIcon},
 ].map(assignId);
 
 export const Tabs = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isDropdown, setIsDropdown] = useState(true);
+  const [selectedItem, setSelectedItem] = useState(LIST[0].value);
 
   const handleResize = () => {
     if (document.documentElement.clientWidth < 768) {
       setIsDropdown(true);
+      setSelectedItem(LIST[0].value);
     } else {
       setIsDropdown(false);
     }
@@ -44,7 +47,7 @@ export const Tabs = () => {
             >
               <button
                 className={style.btn}
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}>Add item <ArrowIcon width={15} height={15}/>
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}>{selectedItem}<ArrowIcon width={15} height={15}/>
               </button>
             </div>
       }
@@ -53,9 +56,9 @@ export const Tabs = () => {
       <ul className={style.list} onClick={() => setIsDropdownOpen(false)}>
         {LIST.map(({value, id, Icon}) =>
           <li key={id} className={style.item}>
-            <button className={style.btn} onClick={() => {
-              console.log(value);
-            }}>{value} { Icon && <Icon width={30} height={30} />}</button>
+            <Text As="button" className={style.btn} onClick={() => {
+              setSelectedItem(value);
+            }}>{value} { Icon && <Icon width={30} height={30} />}</Text>
           </li>)}
       </ul>}
     </div>

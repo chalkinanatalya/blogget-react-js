@@ -13,12 +13,16 @@ export const Text = prop => {
     children,
     href,
     center,
+    bold,
+    medium,
   } = prop;
 
   const classes = classNames(
     className,
     style[color],
     {[style.center]: center},
+    {[style.bold]: bold},
+    {[style.medium]: medium},
     {[style[`fs${size}`]]: size},
     {[style[`fst${tsize}`]]: tsize},
     {[style[`fsd${dsize}`]]: dsize},
@@ -36,9 +40,12 @@ Text.propTypes = {
   href: PropTypes.string,
   children: PropTypes.oneOfType([
     PropTypes.string,
+    PropTypes.number,
     PropTypes.object,
     PropTypes.array,
   ]),
   center: PropTypes.bool,
+  medium: PropTypes.bool,
+  bold: PropTypes.bool,
 };
 

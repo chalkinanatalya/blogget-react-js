@@ -1,5 +1,13 @@
-.center {
-    text-align: center;
+  .center {
+      text-align: center;
+    }
+
+  .medium {
+    font-weight: medium;
+  }
+
+  .bold {
+    font-weight: bold;
   }
   
   .black {
