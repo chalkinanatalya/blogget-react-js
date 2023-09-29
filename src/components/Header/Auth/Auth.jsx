@@ -7,15 +7,14 @@ import PropTypes from 'prop-types';
 import {useAuth} from '../../../hooks/useAuth';
 
 export const Auth = ({token, delToken}) => {
-  const auth = useAuth(token);
+  const handleLogout = () => {
+    delToken();
+  };
+  const auth = useAuth(token, handleLogout);
   const [showLogout, setShowLogout] = useState(false);
 
   const toggleLogoutButton = () => {
     setShowLogout(!showLogout);
-  };
-
-  const handleLogout = () => {
-    delToken();
   };
   return (
     <div className={style.container}>

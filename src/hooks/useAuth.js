@@ -1,16 +1,26 @@
 import {useEffect, useState} from 'react';
 import {URL_API} from '../api/const';
 
-export const useAuth = (token) => {
+const fetchWithTokenCheck = async (url, options, onUnauthorized) => {
+  const response = await fetch(url, options);
+
+  if (response.status === 401 && onUnauthorized) {
+    onUnauthorized();
+  }
+
+  return response;
+};
+
+export const useAuth = (token, onUnauthorized) => {
   const [auth, setAuth] = useState({});
 
   useEffect(() => {
     if (!token) return;
-    fetch(`${URL_API}/api/v1/me`, {
+    fetchWithTokenCheck(`${URL_API}/api/v1/me`, {
       headers: {
         Authorization: `bearer ${token}`
       },
-    }).then(response => response.json()
+    }, onUnauthorized).then(response => response.json()
       .then(({name, icon_img: iconImg}) => {
         const img = iconImg.replace(/\?.*$/, '');
         setAuth({name, img});
@@ -20,7 +30,7 @@ export const useAuth = (token) => {
         console.error(err);
         setAuth({});
       });
-  }, [token]);
+  }, [token, onUnauthorized]);
 
   return auth;
 };
