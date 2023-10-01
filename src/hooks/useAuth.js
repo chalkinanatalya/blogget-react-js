@@ -1,36 +1,36 @@
-import {useEffect, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import {URL_API} from '../api/const';
+import {tokenContext} from '../context/tokenContext';
 
-const fetchWithTokenCheck = async (url, options, onUnauthorized) => {
-  const response = await fetch(url, options);
-
-  if (response.status === 401 && onUnauthorized) {
-    onUnauthorized();
-  }
-
-  return response;
-};
-
-export const useAuth = (token, onUnauthorized) => {
+export const useAuth = () => {
   const [auth, setAuth] = useState({});
+  const {token, delToken} = useContext(tokenContext);
 
   useEffect(() => {
     if (!token) return;
-    fetchWithTokenCheck(`${URL_API}/api/v1/me`, {
+    fetch(`${URL_API}/api/v1/me`, {
       headers: {
         Authorization: `bearer ${token}`
       },
-    }, onUnauthorized).then(response => response.json()
+    })
+      .then((response) => {
+        if (response.status === 401) {
+          throw new Error(response.status);
+        }
+        return response.json();
+      })
       .then(({name, icon_img: iconImg}) => {
         const img = iconImg.replace(/\?.*$/, '');
         setAuth({name, img});
-      }
-      ))
+      })
       .catch(err => {
         console.error(err);
         setAuth({});
+        delToken();
       });
-  }, [token, onUnauthorized]);
+  }, [token]);
 
-  return auth;
+  const clearAuth = () => setAuth({});
+
+  return {auth, clearAuth};
 };
