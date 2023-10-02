@@ -1,7 +1,6 @@
 import style from './Content.module.css';
 import PropTypes from 'prop-types';
 import {Text} from '../../../../../UI/Text/Text';
-console.log('Text: ', Text);
 
 export const Content = ({postData}) => {
   const {title, author} = postData;
