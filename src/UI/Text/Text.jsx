@@ -15,6 +15,7 @@ export const Text = prop => {
     center,
     bold,
     medium,
+    ...otherProps
   } = prop;
 
   const classes = classNames(
@@ -27,7 +28,7 @@ export const Text = prop => {
     {[style[`fst${tsize}`]]: tsize},
     {[style[`fsd${dsize}`]]: dsize},
   );
-  return <As className={classes} href={href}>{children}</As>;
+  return <As className={classes} href={href} {...otherProps}>{children}</As>;
 };
 
 Text.propTypes = {
