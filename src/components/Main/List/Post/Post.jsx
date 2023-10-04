@@ -7,10 +7,11 @@ import {Content} from './Content/Content';
 import {ReactComponent as DeleteIcon} from './img/delete.svg';
 
 export const Post = ({postData}) => {
-  const {title, ups, date, created, url} = postData;
+  const {title, ups, date, created, thumbnail} = postData;
+  const thumbnailReg = /(https?:\/\/.*\.(?:png|jpg|jpeg|gif|bmp|svg))/i;
   return (
     <li className={style.post}>
-      <img className={style.img} src={url || notphoto} alt={title} />
+      <img className={style.img} src={thumbnailReg.test(thumbnail) ? thumbnail : notphoto } alt={title} />
       <button className={style.delete}>
         <DeleteIcon width={24} height={24}/>
       </button>
