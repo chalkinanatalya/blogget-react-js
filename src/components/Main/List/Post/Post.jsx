@@ -1,13 +1,13 @@
 import style from './Post.module.css';
 import PropTypes from 'prop-types';
 import notphoto from './img/notphoto.jpg';
-import {formatDate} from '../../../../utils/formatDate';
 import {Rating} from './Rating/Rating';
 import {Content} from './Content/Content';
 import {ReactComponent as DeleteIcon} from './img/delete.svg';
+import {Date} from './Date/Date';
 
 export const Post = ({postData}) => {
-  const {title, ups, date, created, thumbnail} = postData;
+  const {title, ups, date, thumbnail} = postData;
   const thumbnailReg = /(https?:\/\/.*\.(?:png|jpg|jpeg|gif|bmp|svg))/i;
   return (
     <li className={style.post}>
@@ -17,10 +17,11 @@ export const Post = ({postData}) => {
       </button>
       <Content postData={postData}/>
       <Rating ups={ups}/>
-      <time className={style.date} dateTime={date}>{formatDate(created)}</time>
+      <Date date={date} />
     </li>
   );
 };
+
 
 Post.propTypes = {
   postData: PropTypes.object,

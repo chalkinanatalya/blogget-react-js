@@ -2,74 +2,55 @@ import {useContext, useEffect, useState} from 'react';
 import {tokenContext} from '../context/tokenContext';
 import {URL_API} from '../api/const';
 
-export const useCommentsData = (articleId, options = {}) => {
-  const [comments, setComments] = useState([]);
+export const useCommentsData = (id) => {
+  const [data, setData] = useState([{}, []]);
   const [loading, setLoading] = useState(true);
-  const {token, delToken} = useContext(tokenContext);
+  const {token} = useContext(tokenContext);
 
   useEffect(() => {
-    if (!token || !articleId) return;
+    if (!token || !id) return;
 
-    const {
-      comment,
-      context = 0,
-      depth,
-      limit,
-      showedits = false,
-      showmedia = false,
-      showmore = false,
-      showtitle = true,
-      sort = 'top',
-      sr_detail: srDetails,
-      theme = 'default',
-      threaded = true,
-      truncate
-    } = options;
-
-    const params = new URLSearchParams({
-      context,
-      showedits,
-      showmedia,
-      showmore,
-      showtitle,
-      sort,
-      theme,
-      threaded
-    });
-    if (comment) params.append('comment', comment);
-    if (depth) params.append('depth', depth);
-    if (limit) params.append('limit', limit);
-    if (srDetails) params.append('sr_detail', srDetails);
-    if (truncate) params.append('truncate', truncate);
-
-    fetch(`${URL_API}/comments/${articleId}?${params.toString()}`, {
-      headers: {
-        Authorization: `bearer ${token}`
-      }
-    })
-      .then(response => {
-        if (response.status === 401) {
-          throw new Error('Unauthorized');
+    if (loading) {
+      fetch(`${URL_API}/comments/${id}`, {
+        headers: {
+          Authorization: `bearer ${token}`
         }
-        return response.json();
       })
-      .then(data => {
-        if (data && Array.isArray(data) && data[1] && data[1].data && Array.isArray(data[1].data.children)) {
-          setComments(data[1].data.children.map(item => item.data));
-        } else {
-          console.error('Unexpected data structure:', data);
-          setComments([]);
-        }
-        setLoading(false);
-      })
-      .catch(error => {
-        console.error('Error fetching comments:', error);
-        setLoading(false);
-        if (error.message === 'Unauthorized') {
-          delToken();
-        }
-      });
-  }, [token, articleId, options]);
+        .then(response => {
+          if (response.status === 401) {
+            throw new Error('Unauthorized');
+          }
+          return response.json();
+        })
+        .then(
+          ([
+            {
+              data: {
+                children: [{data: post}],
+              },
+            },
+            {
+              data: {
+                children,
+              },
+            },
+          ]) => {
+            const comments = children.map(item => item.data);
+            setData([post, comments]);
+            setLoading(false);
+          }
+        )
+        .catch(err => {
+          console.error(err);
+          setData([{}, []]);
+          setLoading(false);
+        });
+    }
+  }, [token, id]);
 
-  return {comments, loading};
+  console.log('data: ', data);
+
+  return {data, loading};
 };
+
+

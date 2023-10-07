@@ -65,15 +65,6 @@
   margin-bottom: 10px;
 }
 
-.date {
-  grid-area: data;
-  padding-bottom: 10px;
-  font-weight: 700;
-  font-size: 12px;
-  line-height: 130%;
-  color: #8f8f8f;
-}
-
 .linkPost {
   overflow: hidden;
   -webkit-line-clamp: 2;

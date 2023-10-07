@@ -5,8 +5,7 @@ import {useState} from 'react';
 import {Modal} from '../../../../Modal/Modal';
 
 export const Content = ({postData}) => {
-  // console.log('postData: ', postData);
-  const {title, author, id} = postData;
+  const {title, author, id, created, selftext: markdown} = postData;
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleLinkClick = (event) => {
@@ -39,7 +38,7 @@ export const Content = ({postData}) => {
         className={style.linkAuthor}
         href="#author">{author}
       </Text>
-      {isModalOpen && id && <Modal id={id} closeModal={() => {
+      {isModalOpen && id && <Modal id={id} created={created} title={title} author={author} markdown={markdown} closeModal={() => {
         setIsModalOpen(false);
       }}/>}
 
@@ -51,6 +50,8 @@ Content.propTypes = {
   postData: PropTypes.shape({
     title: PropTypes.string,
     author: PropTypes.string,
-    id: PropTypes.string.isRequired
+    id: PropTypes.string.isRequired,
+    created: PropTypes.number,
+    selftext: PropTypes.string
   }),
 };

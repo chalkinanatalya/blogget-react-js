@@ -3,16 +3,28 @@ import {ReactComponent as CloseIcon} from './img/close.svg';
 import PropTypes from 'prop-types';
 import Markdown from 'markdown-to-jsx';
 import ReactDOM from 'react-dom';
-import {useEffect, useRef} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {useCommentsData} from '../../hooks/useCommentsData';
-import {useBestPosts} from '../../hooks/useBestPosts';
+import {FormComment} from '../Main/List/Post/FormComment/FormComment';
+import {Comments} from '../Main/List/Post/Comments/Comments';
 
-export const Modal = ({id, closeModal}) => {
-  const {posts} = useBestPosts();
-  const {comments, loading} = useCommentsData(id);
+export const Modal = ({
+  id,
+  created,
+  title,
+  author,
+  markdown,
+  closeModal}) => {
+  const {data, loading} = useCommentsData(id);
+  const comments = data[1];
   const overlayRef = useRef(null);
 
-  const post = posts.find(p => p.id === id);
+  const [isFormVisible, setFormVisible] = useState(false);
+  const textareaRef = useRef(null);
+
+  const handleCommentButtonClick = () => {
+    setFormVisible(true);
+  };
 
   const handleClick = e => {
     if (!e.target) return;
@@ -37,6 +49,11 @@ export const Modal = ({id, closeModal}) => {
     };
   }, []);
 
+  useEffect(() => {
+    if (isFormVisible && textareaRef.current) {
+      textareaRef.current.focus();
+    }
+  }, [isFormVisible]);
 
   return ReactDOM.createPortal(
     <div className={style.overlay} ref={overlayRef}>
@@ -45,7 +62,7 @@ export const Modal = ({id, closeModal}) => {
           <p>Loading...</p>
         ) : (
           <>
-            <h2 className={style.title}>{post?.title}</h2>
+            <h2 className={style.title}>{title}</h2>
             <div className={style.content}>
               <Markdown options={{
                 overrides: {
@@ -55,14 +72,19 @@ export const Modal = ({id, closeModal}) => {
                     }
                   }
                 }
-              }}>{post?.selftext}</Markdown>
+              }}>{markdown}</Markdown>
             </div>
-            <p className={style.author}>{post?.author}</p>
-            <ul>
-              {comments.map(comment => (
-                <li key={comment.id}>{comment.body}</li>
-              ))}
-            </ul>
+            <p className={style.author}>{author}</p>
+            {isFormVisible ? (
+              <FormComment textareaRef={textareaRef} />
+            ) : (
+              <button onClick={handleCommentButtonClick} className={style.btn}>
+                Написать комментарий
+              </button>
+            )}
+            {comments && comments.length > 0 && comments.map(comment => (
+              <Comments key={comment.id} comment={comment} created={created} />
+            ))}
           </>
         )}
         <button className={style.close} onClick={closeModal}>
