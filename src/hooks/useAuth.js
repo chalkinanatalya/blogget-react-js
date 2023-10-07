@@ -20,9 +20,9 @@ export const useAuth = () => {
         return response.json();
       })
       .then(({name, icon_img: iconImg}) => {
-        console.log('iconImg: ', iconImg);
+        // console.log('iconImg: ', iconImg);
         // TODO where's icon img
-        const img = iconImg ? iconImg.replace(/\?.*$/, '') : '';
+        const img = typeof iconImg === 'string' ? iconImg.replace(/\?.*$/, '') : '';
         setAuth({name, img});
       })
       .catch(err => {
