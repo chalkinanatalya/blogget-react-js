@@ -10,7 +10,7 @@ export const useBestPosts = () => {
   useEffect(() => {
     if (!token) return;
 
-    fetch(`${URL_API}/best.json`, {
+    fetch(`${URL_API}/best`, {
       headers: {
         Authorization: `bearer ${token}`
       }
