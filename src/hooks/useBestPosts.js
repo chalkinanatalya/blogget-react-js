@@ -1,11 +1,13 @@
-import {useContext, useEffect, useState} from 'react';
-import {tokenContext} from '../context/tokenContext';
+import {useEffect, useState} from 'react';
 import {URL_API} from '../api/const';
+import {useSelector, useDispatch} from 'react-redux';
+import {deleteToken} from '../store';
 
 export const useBestPosts = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const {token, delToken} = useContext(tokenContext);
+  const token = useSelector(state => state.token);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (!token) return;
@@ -29,7 +31,7 @@ export const useBestPosts = () => {
         console.error('Error fetching best posts:', error);
         setLoading(false);
         if (error.message === 'Unauthorized') {
-          delToken();
+          dispatch(deleteToken());
         }
       });
   }, [token]);
