@@ -1,20 +1,22 @@
 export const setToken = (token) => {
-  localStorage.setItem('bearer', token);
+  if (token) {
+    localStorage.setItem('bearer', token);
+  } else {
+    localStorage.removeItem('bearer');
+  }
 };
 
 export const getToken = () => {
-  let token = '';
   if (location.pathname.includes('/auth')) {
-    token = new URLSearchParams(location.hash.substring(1))
-      .get('access_token');
-    setToken(token);
+    const token = new URLSearchParams(location.hash.substring(1)).get('access_token');
+    if (token) {
+      setToken(token);
+      window.history.replaceState({}, document.title, '/auth');
+      return token;
+    }
   }
 
-  if (localStorage.getItem('bearer')) {
-    setToken(localStorage.getItem('bearer'));
-  }
-
-  return token;
+  return localStorage.getItem('bearer');
 };
 
 

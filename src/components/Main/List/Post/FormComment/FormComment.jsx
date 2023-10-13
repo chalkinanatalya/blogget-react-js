@@ -4,11 +4,10 @@ import style from './FormComment.module.css';
 import PropTypes from 'prop-types';
 import {authContext} from '../../../../../context/authContext';
 import {useDispatch, useSelector} from 'react-redux';
-import {updateComment} from '../../../../../store';
+import {updateComment} from '../../../../../store/commentReducer';
 
-
-export const FormComment = ({textareaRef}) => {
-  const value = useSelector(state => state.comment);
+export const FormComment = () => {
+  const value = useSelector(state => state.comment.comment);
   const dispatch = useDispatch();
 
   const {auth} = useContext(authContext);
