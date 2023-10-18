@@ -7,6 +7,7 @@ import {useEffect, useRef, useState} from 'react';
 import {useCommentsData} from '../../hooks/useCommentsData';
 import {FormComment} from '../Main/List/Post/FormComment/FormComment';
 import {Comments} from '../Main/List/Post/Comments/Comments';
+import AuthLoader from '../../UI/AuthLoader';
 
 export const Modal = ({
   id,
@@ -15,8 +16,7 @@ export const Modal = ({
   author,
   markdown,
   closeModal}) => {
-  const {data, loading} = useCommentsData(id);
-  const comments = data[1];
+  const {comments, status} = useCommentsData(id);
   const overlayRef = useRef(null);
 
   const [isFormVisible, setFormVisible] = useState(false);
@@ -58,9 +58,9 @@ export const Modal = ({
   return ReactDOM.createPortal(
     <div className={style.overlay} ref={overlayRef}>
       <div className={style.modal}>
-        {loading ? (
-          <p>Loading...</p>
-        ) : (
+        {status === 'loading' && <AuthLoader />}
+        {status === 'error' && 'Error'}
+        {status === 'loaded' && (
           <>
             <h2 className={style.title}>{title}</h2>
             <div className={style.content}>
@@ -76,12 +76,12 @@ export const Modal = ({
             </div>
             <p className={style.author}>{author}</p>
             {isFormVisible ? (
-              <FormComment textareaRef={textareaRef} />
-            ) : (
-              <button onClick={handleCommentButtonClick} className={style.btn}>
-                Написать комментарий
-              </button>
-            )}
+                      <FormComment textareaRef={textareaRef} />
+                    ) : (
+                      <button onClick={handleCommentButtonClick} className={style.btn}>
+                        Написать комментарий
+                      </button>
+                    )}
             {comments && comments.length > 0 && comments.map(comment => (
               <Comments key={comment.id} comment={comment} created={created} />
             ))}
