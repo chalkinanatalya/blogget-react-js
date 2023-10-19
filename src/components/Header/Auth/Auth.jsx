@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Text} from '../../../UI/Text/Text';
 import {urlAuth} from '../../../api/auth';
 import style from './Auth.module.css';
@@ -7,18 +7,28 @@ import PropTypes from 'prop-types';
 import {useDispatch, useSelector} from 'react-redux';
 import {deleteToken} from '../../../store/tokenReducer';
 import {useAuth} from '../../../hooks/useAuth';
-import {AuthLoader} from './AuthLoader/AuthLoader';
+import AuthLoader from '../../../UI/AuthLoader';
+import {Notification} from '../../Notification/Notification';
 
 
 export const Auth = () => {
   const [showLogout, setShowLogout] = useState(false);
+  const [isNotificationVisible, setNotificationVisible] = useState(false);
   const token = useSelector(state => state.token.token);
   const {auth, loading, clearAuth} = useAuth();
+  const error = useSelector(state => state.auth.error);
   const dispatch = useDispatch();
 
   const toggleLogoutButton = () => {
     setShowLogout(!showLogout);
   };
+
+
+  useEffect(() => {
+    if (error) {
+      setNotificationVisible(true);
+    }
+  }, [error]);
 
   const logOut = () => {
     dispatch(deleteToken());
@@ -39,6 +49,10 @@ export const Auth = () => {
         <LoginIcon className={style.svg}/>
       </Text>
     )}
+
+      {isNotificationVisible &&
+                <Notification closeNotification={() => setNotificationVisible(false)} message={error} />
+      }
     </div>
   );
 };

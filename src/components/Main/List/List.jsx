@@ -2,12 +2,13 @@ import {useContext} from 'react';
 import {postsContext} from '../../../context/postContext';
 import style from './List.module.css';
 import {Post} from './Post/Post';
+import AuthLoader from '../../../UI/AuthLoader';
 
 export const List = () => {
   const {posts, loading} = useContext(postsContext);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <AuthLoader />;
   }
 
   return (

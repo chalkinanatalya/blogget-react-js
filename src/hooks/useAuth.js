@@ -1,6 +1,6 @@
 import {useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {authLogout, authRequestAsync} from '../store/auth/action';
+import {authLogout, authRequestAsync} from '../store/auth/authAction';
 
 
 export const useAuth = () => {

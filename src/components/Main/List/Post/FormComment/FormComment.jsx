@@ -2,7 +2,7 @@ import {Text} from '../../../../../UI/Text/Text';
 import style from './FormComment.module.css';
 import PropTypes from 'prop-types';
 import {useDispatch, useSelector} from 'react-redux';
-import {updateComment} from '../../../../../store/commentReducer';
+import {updateComment} from '../../../../../store/comment/commentReducer';
 import {useAuth} from '../../../../../hooks/useAuth';
 
 export const FormComment = () => {
