@@ -5,6 +5,7 @@ import {deleteToken} from '../tokenReducer';
 export const FETCH_POSTS_REQUEST = 'FETCH_POSTS_REQUEST';
 export const FETCH_POSTS_SUCCESS = 'FETCH_POSTS_SUCCESS';
 export const FETCH_POSTS_FAILURE = 'FETCH_POSTS_FAILURE';
+export const FETCH_POSTS_SUCCESS_AFTER = 'ETCH_POSTS_SUCCESS_AFTER';
 
 export const fetchPostsRequest = () => ({
   type: FETCH_POSTS_REQUEST,
@@ -12,7 +13,14 @@ export const fetchPostsRequest = () => ({
 
 export const fetchPostsSuccess = (posts) => ({
   type: FETCH_POSTS_SUCCESS,
-  payload: posts,
+  payload: posts.children, // posts
+  after: posts.after
+});
+
+export const fetchPostsSuccessAfter = (posts) => ({
+  type: FETCH_POSTS_SUCCESS_AFTER,
+  payload: posts.children,
+  after: posts.after
 });
 
 export const fetchPostsFailure = (error) => ({
@@ -22,18 +30,24 @@ export const fetchPostsFailure = (error) => ({
 
 export const fetchPostsAsync = () => (dispatch, getState) => {
   const token = getState().token.token;
-  if (!token) return;
+  const after = getState().posts.after;
+  const loading = getState().posts.loading;
+  const isLast = getState().posts.isLast;
+  if (!token || loading || isLast) return;
 
   dispatch(fetchPostsRequest());
 
-  axios(`${URL_API}/best`, {
+  axios(`${URL_API}/best?limit=10&${after ? `after=${after}` : ''}`, {
     headers: {
       Authorization: `bearer ${token}`
     },
   })
-    .then(response => {
-      const posts = response.data.data.children.map(item => item.data);
-      dispatch(fetchPostsSuccess(posts));
+    .then(({data}) => {
+      if (after) {
+        dispatch(fetchPostsSuccessAfter(data.data));
+      } else {
+        dispatch(fetchPostsSuccess(data.data));
+      }
     })
     .catch(err => {
       console.error(err);
