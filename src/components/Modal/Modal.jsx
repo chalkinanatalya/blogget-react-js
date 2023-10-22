@@ -6,18 +6,18 @@ import ReactDOM from 'react-dom';
 import {useEffect, useRef, useState} from 'react';
 import {useCommentsData} from '../../hooks/useCommentsData';
 import {FormComment} from '../Main/List/Post/FormComment/FormComment';
-import {Comments} from '../Main/List/Post/Comments/Comments';
+import {Comments} from './Comments/Comments';
 import AuthLoader from '../../UI/AuthLoader';
+import {useNavigate, useParams} from 'react-router-dom';
 
-export const Modal = ({
-  id,
-  created,
-  title,
-  author,
-  markdown,
-  closeModal}) => {
-  const {comments, status} = useCommentsData(id);
+export const Modal = () => {
+  const {id, page} = useParams();
+  const navigate = useNavigate();
   const overlayRef = useRef(null);
+  const data = useCommentsData(id);
+  // console.log('data: ', data);
+  const {status, post, comments} = data;
+  console.log('comments: ', comments);
 
   const [isFormVisible, setFormVisible] = useState(false);
   const textareaRef = useRef(null);
@@ -30,13 +30,13 @@ export const Modal = ({
     if (!e.target) return;
     const target = e.target;
     if (target === overlayRef.current) {
-      closeModal();
+      navigate(`category/${page}`);
     }
   };
 
   const handleKeyDown = e => {
     if (e.key === 'Escape') {
-      closeModal();
+      navigate(`category/${page}`);
     }
   };
 
@@ -62,7 +62,7 @@ export const Modal = ({
         {status === 'error' && 'Error'}
         {status === 'loaded' && (
           <>
-            <h2 className={style.title}>{title}</h2>
+            <h2 className={style.title}>{post?.title}</h2>
             <div className={style.content}>
               <Markdown options={{
                 overrides: {
@@ -72,9 +72,9 @@ export const Modal = ({
                     }
                   }
                 }
-              }}>{markdown}</Markdown>
+              }}>{post?.selftext}</Markdown>
             </div>
-            <p className={style.author}>{author}</p>
+            <p className={style.author}>{post?.author}</p>
             {isFormVisible ? (
                       <FormComment textareaRef={textareaRef} />
                     ) : (
@@ -83,11 +83,13 @@ export const Modal = ({
                       </button>
                     )}
             {comments && comments.length > 0 && comments.map(comment => (
-              <Comments key={comment.id} comment={comment} created={created} />
+              <Comments key={comment.id} comment={comment} created={post?.created} />
             ))}
           </>
         )}
-        <button className={style.close} onClick={closeModal}>
+        <button className={style.close} onClick={() => {
+          navigate(`category/${page}`);
+        }}>
           <CloseIcon />
         </button>
       </div>

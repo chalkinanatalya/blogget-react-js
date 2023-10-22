@@ -23,6 +23,8 @@ export const useCommentsData = (id) => {
     }
   }, [id, dispatch]);
 
+  console.log('data: ', id);
+
   return {...data, loading, error, status};
 };
 

@@ -7,7 +7,7 @@ export const setToken = (token) => {
 };
 
 export const getToken = () => {
-  if (location.pathname.includes('/auth')) {
+  if (location.pathname.includes('/auth') && location.hash) {
     const token = new URLSearchParams(location.hash.substring(1)).get('access_token');
     if (token) {
       setToken(token);

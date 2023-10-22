@@ -1,4 +1,4 @@
-import {FETCH_POSTS_FAILURE, FETCH_POSTS_REQUEST, FETCH_POSTS_SUCCESS, FETCH_POSTS_SUCCESS_AFTER} from './postsAction';
+import {CHANGE_PAGE, FETCH_POSTS_FAILURE, FETCH_POSTS_REQUEST, FETCH_POSTS_SUCCESS, FETCH_POSTS_SUCCESS_AFTER} from './postsAction';
 
 
 const initialState = {
@@ -7,6 +7,7 @@ const initialState = {
   error: '',
   after: '',
   isLast: false,
+  page: ''
 };
 
 export const postsReducer = (state = initialState, action) => {
@@ -19,8 +20,6 @@ export const postsReducer = (state = initialState, action) => {
       };
 
     case FETCH_POSTS_SUCCESS:
-      console.log('Existing posts:', state.posts);
-      console.log('New posts:', action.payload);
       return {
         ...state,
         loading: false,
@@ -45,6 +44,14 @@ export const postsReducer = (state = initialState, action) => {
         ...state,
         loading: false,
         error: action.error
+      };
+
+    case CHANGE_PAGE:
+      return {
+        ...state,
+        page: action.page,
+        after: '',
+        isLast: false,
       };
 
     default: return state;
