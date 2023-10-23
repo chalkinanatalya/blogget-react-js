@@ -6,6 +6,7 @@ export const FETCH_POSTS_REQUEST = 'FETCH_POSTS_REQUEST';
 export const FETCH_POSTS_SUCCESS = 'FETCH_POSTS_SUCCESS';
 export const FETCH_POSTS_FAILURE = 'FETCH_POSTS_FAILURE';
 export const FETCH_POSTS_SUCCESS_AFTER = 'ETCH_POSTS_SUCCESS_AFTER';
+export const CHANGE_PAGE = 'CHANGE_PAGE';
 
 export const fetchPostsRequest = () => ({
   type: FETCH_POSTS_REQUEST,
@@ -28,16 +29,29 @@ export const fetchPostsFailure = (error) => ({
   error,
 });
 
-export const fetchPostsAsync = () => (dispatch, getState) => {
+export const changePage = (page) => ({
+  type: CHANGE_PAGE,
+  page
+});
+
+export const fetchPostsAsync = (newPage) => (dispatch, getState) => {
+  let page = getState().posts.page;
+
+  if (newPage) {
+    page = newPage;
+    dispatch(changePage(page));
+  }
+
   const token = getState().token.token;
   const after = getState().posts.after;
   const loading = getState().posts.loading;
   const isLast = getState().posts.isLast;
+
   if (!token || loading || isLast) return;
 
   dispatch(fetchPostsRequest());
 
-  axios(`${URL_API}/best?limit=10&${after ? `after=${after}` : ''}`, {
+  axios(`${URL_API}/${page}?limit=10&${after ? `after=${after}` : ''}`, {
     headers: {
       Authorization: `bearer ${token}`
     },

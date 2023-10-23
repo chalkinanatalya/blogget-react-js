@@ -35,7 +35,7 @@ export const authRequestAsync = () => (dispatch, getState) => {
     },
   })
     .then(({data: {name, icon_img: iconImg}}) => {
-      const img = typeof iconImg === 'string' ? iconImg.replace(/\?.*$/, '') : '';
+      const img = iconImg && typeof iconImg === 'string' ? iconImg.replace(/\?.*$/, '') : '';
       const data = {name, img};
       dispatch(authRequestSuccess(data));
     })

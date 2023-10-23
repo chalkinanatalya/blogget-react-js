@@ -1,5 +1,5 @@
-import {Text} from '../../../../../UI/Text/Text';
-import {Date} from '../Date/Date';
+import {Text} from '../../../UI/Text/Text';
+import {Date} from '../../Main/List/Post/Date/Date';
 import style from './Comments.module.css';
 import PropTypes from 'prop-types';
 
