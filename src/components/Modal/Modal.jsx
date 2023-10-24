@@ -15,10 +15,7 @@ export const Modal = () => {
   const navigate = useNavigate();
   const overlayRef = useRef(null);
   const data = useCommentsData(id);
-  // console.log('data: ', data);
   const {status, post, comments} = data;
-  console.log('comments: ', comments);
-
   const [isFormVisible, setFormVisible] = useState(false);
   const textareaRef = useRef(null);
 
@@ -30,13 +27,13 @@ export const Modal = () => {
     if (!e.target) return;
     const target = e.target;
     if (target === overlayRef.current) {
-      navigate(`category/${page}`);
+      navigate(`/category/${page}`);
     }
   };
 
   const handleKeyDown = e => {
     if (e.key === 'Escape') {
-      navigate(`category/${page}`);
+      navigate(`/category/${page}`);
     }
   };
 
@@ -72,7 +69,7 @@ export const Modal = () => {
                     }
                   }
                 }
-              }}>{post?.selftext}</Markdown>
+              }}>{post?.selftext || ''}</Markdown>
             </div>
             <p className={style.author}>{post?.author}</p>
             {isFormVisible ? (
@@ -88,7 +85,7 @@ export const Modal = () => {
           </>
         )}
         <button className={style.close} onClick={() => {
-          navigate(`category/${page}`);
+          navigate(`/category/${page}`);
         }}>
           <CloseIcon />
         </button>
