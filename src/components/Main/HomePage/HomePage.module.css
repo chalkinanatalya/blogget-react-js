@@ -1,0 +1,56 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 70vh;
+    background-color: var(--greyE6);
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+}
+
+.logo {
+    margin-bottom: 1rem;
+    width: 128px;
+    height: 128px;
+    fill: #5BB12C;
+}
+
+.title {
+    font-size: 2.5rem;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.description {
+    font-size: 1.2rem;
+    color: #666;
+    text-align: center;
+    max-width: 600px;
+}
+
+.container:hover {
+    transform: scale(1.02);
+    transition: transform 0.3s;
+}
+
+.title:hover {
+    color: #5BB12C;
+}
+
+.prompt {
+    font-size: 1.4rem;
+    color: #5BB12C;
+    font-weight: bold;
+    margin-top: 1.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: opacity 0.3s, transform 0.3s;
+}
+
+.prompt:hover {
+    opacity: 0.8;
+    transform: scale(1.05);
+}
+

@@ -8,3 +8,18 @@
   .end {
     flex-basis: 100%;
   }
+
+  .loadMoreButton {
+    padding: 10px 20px;
+    margin-top: 20px;
+    background-color: #4DA71C;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  
+    &:hover {
+      background-color: #3c8a16;
+    }
+  }

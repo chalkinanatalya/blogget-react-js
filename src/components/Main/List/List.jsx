@@ -1,4 +1,4 @@
-import {useEffect, useRef} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import style from './List.module.css';
 import {Post} from './Post/Post';
 import {useDispatch, useSelector} from 'react-redux';
@@ -11,17 +11,27 @@ export const List = () => {
   const dispatch = useDispatch();
   const {page} = useParams();
 
+  const [autoLoadCount, setAutoLoadCount] = useState(1);
+  const autoLoadCountRef = useRef(autoLoadCount);
+
   useEffect(() => {
-    dispatch(fetchPostsAsync(page));
+    dispatch(fetchPostsAsync());
   }, [page]);
+
+  useEffect(() => {
+    autoLoadCountRef.current = autoLoadCount;
+  }, [autoLoadCount]);
 
   const uniquePosts = [...new Map(postData.map(item => [item.data.id, item])).values()];
 
   useEffect(() => {
-    if (!endList.current) return;
     const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting) {
         dispatch(fetchPostsAsync());
+        setAutoLoadCount(prev => prev + 1);
+        if (autoLoadCountRef.current >= 3) {
+          observer.unobserve(endList.current);
+        }
       }
     }, {
       rootMargin: '100px'
@@ -33,7 +43,7 @@ export const List = () => {
         observer.unobserve(endList.current);
       }
     };
-  }, [endList.current]);
+  }, [endList.current, dispatch]);
 
   return (
     <>
@@ -43,6 +53,17 @@ export const List = () => {
         }
         <li ref={endList} className={style.end}/>
       </ul>
+      {autoLoadCountRef.current >= 4 && (
+        <button
+          className={style.loadMoreButton}
+          onClick={() => {
+            dispatch(fetchPostsAsync());
+            setAutoLoadCount(prev => prev + 1);
+          }}
+        >
+          Загрузить еще
+        </button>
+      )}
       <Outlet />
     </>
   );
