@@ -15,7 +15,7 @@ export const List = () => {
   const autoLoadCountRef = useRef(autoLoadCount);
 
   useEffect(() => {
-    dispatch(fetchPostsAsync());
+    dispatch(fetchPostsAsync(page));
   }, [page]);
 
   useEffect(() => {
@@ -27,7 +27,7 @@ export const List = () => {
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting) {
-        dispatch(fetchPostsAsync());
+        dispatch(fetchPostsAsync(page));
         setAutoLoadCount(prev => prev + 1);
         if (autoLoadCountRef.current >= 3) {
           observer.unobserve(endList.current);
@@ -57,7 +57,7 @@ export const List = () => {
         <button
           className={style.loadMoreButton}
           onClick={() => {
-            dispatch(fetchPostsAsync());
+            dispatch(fetchPostsAsync(page));
             setAutoLoadCount(prev => prev + 1);
           }}
         >

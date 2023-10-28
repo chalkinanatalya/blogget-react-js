@@ -1,73 +1,40 @@
+import {createAsyncThunk} from '@reduxjs/toolkit';
 import axios from 'axios';
-import {URL_API} from '../../api/const';
 import {deleteToken} from '../tokenReducer';
+import {URL_API} from '../../api/const';
+import {changePage} from './postSlice';
 
-export const FETCH_POSTS_REQUEST = 'FETCH_POSTS_REQUEST';
-export const FETCH_POSTS_SUCCESS = 'FETCH_POSTS_SUCCESS';
-export const FETCH_POSTS_FAILURE = 'FETCH_POSTS_FAILURE';
-export const FETCH_POSTS_SUCCESS_AFTER = 'ETCH_POSTS_SUCCESS_AFTER';
-export const CHANGE_PAGE = 'CHANGE_PAGE';
+export const fetchPostsAsync = createAsyncThunk(
+  'posts/fetch',
+  async (newPage, {getState, dispatch}) => {
+    const state = getState().posts;
 
-export const fetchPostsRequest = () => ({
-  type: FETCH_POSTS_REQUEST,
-});
+    if (newPage) {
+      dispatch(changePage(newPage));
+    }
 
-export const fetchPostsSuccess = (posts) => ({
-  type: FETCH_POSTS_SUCCESS,
-  payload: posts.children, // posts
-  after: posts.after
-});
+    const page = newPage || state.page;
+    const {after, isLast} = state;
+    const token = getState().token.token;
 
-export const fetchPostsSuccessAfter = (posts) => ({
-  type: FETCH_POSTS_SUCCESS_AFTER,
-  payload: posts.children,
-  after: posts.after
-});
-
-export const fetchPostsFailure = (error) => ({
-  type: FETCH_POSTS_FAILURE,
-  error,
-});
-
-export const changePage = (page) => ({
-  type: CHANGE_PAGE,
-  page
-});
-
-export const fetchPostsAsync = (newPage) => (dispatch, getState) => {
-  let page = getState().posts.page;
-
-  if (newPage) {
-    page = newPage;
-    dispatch(changePage(page));
-  }
-
-  const token = getState().token.token;
-  const after = getState().posts.after;
-  const loading = getState().posts.loading;
-  const isLast = getState().posts.isLast;
-
-  if (!token || loading || isLast) return;
-
-  dispatch(fetchPostsRequest());
-
-  axios(`${URL_API}/${page}?limit=10&${after ? `after=${after}` : ''}`, {
-    headers: {
-      Authorization: `bearer ${token}`
-    },
-  })
-    .then(({data}) => {
-      if (after) {
-        dispatch(fetchPostsSuccessAfter(data.data));
-      } else {
-        dispatch(fetchPostsSuccess(data.data));
-      }
-    })
-    .catch(err => {
-      console.error(err);
-      if (err.response && err.response.status === 401) {
-        dispatch(deleteToken());
-      }
-      dispatch(fetchPostsFailure(err.message));
+    if (!token || isLast) return;
+    const response = await axios(`${URL_API}/${page}?limit=10&${after ? `after=${after}` : ''}`, {
+      headers: {
+        Authorization: `bearer ${token}`
+      },
     });
-};
+
+    if (response.status === 401) {
+      dispatch(deleteToken());
+      throw new Error('Unauthorized');
+    }
+
+    if (!response.data || !response.data.data) {
+      throw new Error('Invalid server response');
+    }
+
+    return response.data.data;
+  }
+);
+
+
