@@ -1,5 +1,4 @@
 import {createSlice} from '@reduxjs/toolkit';
-import {fetchCommentsAsync} from './commentAction';
 
 const initialState = {
   comment: 'Hello, Redux',
@@ -11,23 +10,26 @@ const initialState = {
 export const commentsSlice = createSlice({
   name: 'comments',
   initialState,
-  reducers: {},
-  extraReducers: {
-    [fetchCommentsAsync.pending.type]: (state) => {
-      state.error = '';
+  reducers: {
+    fetchCommentsRequest: state => {
       state.loading = true;
+      state.error = null;
     },
-    [fetchCommentsAsync.fulfilled.type]: (state, action) => {
+    fetchCommentsSuccess: (state, action) => {
       state.loading = false;
       state.data = action.payload;
       state.error = null;
     },
-    [fetchCommentsAsync.rejected.type]: (state, action) => {
+    fetchCommentsFailed: (state, action) => {
       state.loading = false;
-      state.error = action.payload.err;
+      state.error = action.payload;
     },
-
-  }
+  },
 });
 
+export const {
+  fetchCommentsRequest,
+  fetchCommentsSuccess,
+  fetchCommentsFailed
+} = commentsSlice.actions;
 export default commentsSlice.reducer;

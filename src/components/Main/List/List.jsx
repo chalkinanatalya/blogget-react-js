@@ -2,8 +2,8 @@ import {useEffect, useRef, useState} from 'react';
 import style from './List.module.css';
 import {Post} from './Post/Post';
 import {useDispatch, useSelector} from 'react-redux';
-import {fetchPostsAsync} from '../../../store/postsData/postsAction';
 import {Outlet, useParams} from 'react-router-dom';
+import {fetchPostsRequest} from '../../../store/postsData/postsSlice';
 
 export const List = () => {
   const postData = useSelector(state => state.posts.posts);
@@ -15,7 +15,7 @@ export const List = () => {
   const autoLoadCountRef = useRef(autoLoadCount);
 
   useEffect(() => {
-    dispatch(fetchPostsAsync(page));
+    dispatch(fetchPostsRequest(page));
   }, [page]);
 
   useEffect(() => {
@@ -27,7 +27,7 @@ export const List = () => {
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting) {
-        dispatch(fetchPostsAsync(page));
+        dispatch(fetchPostsRequest(page));
         setAutoLoadCount(prev => prev + 1);
         if (autoLoadCountRef.current >= 3) {
           observer.unobserve(endList.current);
@@ -57,7 +57,7 @@ export const List = () => {
         <button
           className={style.loadMoreButton}
           onClick={() => {
-            dispatch(fetchPostsAsync(page));
+            dispatch(fetchPostsRequest(page));
             setAutoLoadCount(prev => prev + 1);
           }}
         >
