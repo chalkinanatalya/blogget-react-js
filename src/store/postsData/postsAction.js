@@ -2,7 +2,7 @@ import {createAsyncThunk} from '@reduxjs/toolkit';
 import axios from 'axios';
 import {deleteToken} from '../tokenReducer';
 import {URL_API} from '../../api/const';
-import {changePage} from './postSlice';
+import {changePage} from './postsSlice';
 
 export const fetchPostsAsync = createAsyncThunk(
   'posts/fetch',

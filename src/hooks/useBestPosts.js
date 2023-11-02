@@ -1,6 +1,6 @@
 import {useEffect} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import {fetchPostsAsync} from '../store/postsData/postsAction';
+import {fetchPostsRequest} from '../store/postsData/postsSlice';
 
 export const useBestPosts = () => {
   const posts = useSelector(state => state.posts.posts);
@@ -12,7 +12,7 @@ export const useBestPosts = () => {
   useEffect(() => {
     if (!token) return;
 
-    dispatch(fetchPostsAsync());
+    dispatch(fetchPostsRequest());
   }, [token, dispatch]);
 
   useEffect(() => {
