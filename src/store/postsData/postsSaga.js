@@ -5,7 +5,7 @@ import {fetchPostsFailed, fetchPostsSuccess, fetchPostsRequest, changePage} from
 import {deleteToken} from '../tokenReducer';
 
 function* fetchPostsSaga(action) {
-  const {newPage} = action;
+  const newPage = action.payload;
 
   if (newPage) {
     yield put(changePage(newPage));
