@@ -1,15 +1,11 @@
 import {put, takeLatest, call, select} from 'redux-saga/effects';
 import axios from 'axios';
 import {URL_API} from '../../api/const';
-import {
-  fetchCommentsRequest,
-  fetchCommentsSuccess,
-  fetchCommentsFailed
-} from './commentsSlice';
+import {fetchCommentsRequest, fetchCommentsSuccess, fetchCommentsFailed} from './commentsSlice';
 import {deleteToken} from '../tokenReducer';
 
 function* fetchCommentsSaga(action) {
-  const {id} = action.payload;
+  const id = action.payload;
   const token = yield select(state => state.token.token);
 
   if (!token || !id) return;
