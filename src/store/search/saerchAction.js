@@ -9,10 +9,10 @@ export const searchRequest = (search) => (
   }
 );
 
-export const searchRequestSuccess = ({children, after}) => (
+export const searchRequestSuccess = ({posts, after}) => (
   {
     type: SEARCH_REQUEST_SUCCESS,
-    posts: children,
+    posts,
     after,
   }
 );

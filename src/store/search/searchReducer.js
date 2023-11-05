@@ -6,7 +6,8 @@ const initialState = {
   error: '',
   after: '',
   isLast: false,
-  page: ''
+  page: '',
+  hasMoreData: true
 };
 
 export const searchReducer = (state = initialState, action) => {
@@ -18,12 +19,14 @@ export const searchReducer = (state = initialState, action) => {
         error: ''
       };
     case SEARCH_REQUEST_SUCCESS:
+      console.log(action.posts);
       return {
         ...state,
         loading: false,
-        posts: action.posts,
+        posts: [...state.posts, ...action.posts],
         error: '',
-        after: action.after
+        after: action.after,
+        hasMoreData: !!action.after
       };
     case SEARCH_REQUEST_ERROR:
       return {
