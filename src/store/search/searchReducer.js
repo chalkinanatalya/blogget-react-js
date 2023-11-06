@@ -7,7 +7,8 @@ const initialState = {
   after: '',
   isLast: false,
   page: '',
-  hasMoreData: true
+  hasMoreData: true,
+  query: ''
 };
 
 export const searchReducer = (state = initialState, action) => {
@@ -16,10 +17,10 @@ export const searchReducer = (state = initialState, action) => {
       return {
         ...state,
         loading: true,
-        error: ''
+        error: '',
+        query: action.search
       };
     case SEARCH_REQUEST_SUCCESS:
-      console.log(action.posts);
       return {
         ...state,
         loading: false,

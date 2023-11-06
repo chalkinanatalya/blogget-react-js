@@ -3,6 +3,7 @@ import {URL_API} from '../../api/const';
 import {SEARCH_REQUEST, searchRequestError, searchRequestSuccess} from './saerchAction';
 
 function* fetchSearch(action) {
+  console.log(action);
   const searchQuery = action.search;
   if (!searchQuery) {
     console.error('Пустой запрос поиска');
@@ -12,7 +13,7 @@ function* fetchSearch(action) {
   const after = yield select(state => state.search.after);
   try {
     const afterParam = after ? `&after=${after}` : '';
-    const response = yield call(fetch, `${URL_API}/search?q=${searchQuery}&limit=25${afterParam}`, {
+    const response = yield call(fetch, `${URL_API}/search?q=${searchQuery}&limit=26${afterParam}`, {
       headers: {
         Authorization: `bearer ${token}`
       },
