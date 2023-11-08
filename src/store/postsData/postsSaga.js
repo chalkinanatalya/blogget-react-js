@@ -6,8 +6,9 @@ import {deleteToken} from '../tokenReducer';
 
 function* fetchPostsSaga(action) {
   const newPage = action.payload;
+  const page = yield select(state => state.posts.page);
 
-  if (newPage) {
+  if (newPage !== page) {
     yield put(changePage(newPage));
   }
 

@@ -3,7 +3,6 @@ import {URL_API} from '../../api/const';
 import {SEARCH_REQUEST, searchRequestError, searchRequestSuccess} from './saerchAction';
 
 function* fetchSearch(action) {
-  console.log(action);
   const searchQuery = action.search;
   if (!searchQuery) {
     console.error('Пустой запрос поиска');
@@ -11,6 +10,7 @@ function* fetchSearch(action) {
   }
   const token = yield select(state => state.token.token);
   const after = yield select(state => state.search.after);
+
   try {
     const afterParam = after ? `&after=${after}` : '';
     const response = yield call(fetch, `${URL_API}/search?q=${searchQuery}&limit=26${afterParam}`, {
@@ -20,7 +20,6 @@ function* fetchSearch(action) {
     });
 
     const data = yield response.json();
-    console.log(data.data.children);
 
     yield put(searchRequestSuccess({
       posts: data.data.children,

@@ -1,6 +1,7 @@
 export const SEARCH_REQUEST = 'SEARCH_REQUEST';
 export const SEARCH_REQUEST_SUCCESS = 'SEARCH_REQUEST_SUCCESS';
 export const SEARCH_REQUEST_ERROR = 'SEARCH_REQUEST_ERROR';
+export const SEARCH_RESET = 'SEARCH_RESET';
 
 export const searchRequest = (search) => (
   {
@@ -24,4 +25,9 @@ export const searchRequestError = (error) => (
   }
 );
 
-
+export const searchReset = (error) => (
+  {
+    type: SEARCH_RESET,
+    error
+  }
+);

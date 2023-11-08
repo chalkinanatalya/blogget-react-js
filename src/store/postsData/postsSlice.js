@@ -5,8 +5,8 @@ const initialState = {
   posts: [],
   error: '',
   after: '',
-  isLast: false,
-  page: ''
+  page: '',
+  hasMoreData: true,
 };
 
 const postsSlice = createSlice({
@@ -21,15 +21,15 @@ const postsSlice = createSlice({
       state.loading = false;
       const {children, after} = action.payload;
 
-      if (state.after && children) {
+      if (after && children) {
         state.posts = [...state.posts, ...children];
       } else if (children) {
         state.posts = children;
       }
 
       state.after = after;
-      state.isLast = !after;
       state.error = '';
+      state.hasMoreData = !!after;
     },
     fetchPostsFailed: (state, action) => {
       state.loading = false;
