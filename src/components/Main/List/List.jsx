@@ -15,6 +15,9 @@ export const List = () => {
   const dispatch = useDispatch();
   const {page} = useParams();
 
+  const state = useSelector(state => state);
+  console.log(state);
+
   const [autoLoadCount, setAutoLoadCount] = useState(1);
   const autoLoadCountRef = useRef(autoLoadCount);
   const searchQuery = useSelector(state => state.search.query);
@@ -73,6 +76,7 @@ export const List = () => {
           className={style.loadMoreButton}
           onClick={() => {
             if (searchResults.length) {
+              console.log(searchQuery);
               dispatch(searchRequest(searchQuery));
             } else {
               dispatch(fetchPostsRequest(page));
