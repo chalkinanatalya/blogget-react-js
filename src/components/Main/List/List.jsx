@@ -4,7 +4,7 @@ import {Post} from './Post/Post';
 import {useDispatch, useSelector} from 'react-redux';
 import {Outlet, useParams} from 'react-router-dom';
 import {fetchPostsRequest} from '../../../store/postsData/postsSlice';
-import {searchRequest} from '../../../store/search/saerchAction';
+import {searchRequest, searchReset} from '../../../store/search/saerchAction';
 
 export const List = () => {
   const searchResults = useSelector(state => state.search.posts);
@@ -15,20 +15,22 @@ export const List = () => {
   const dispatch = useDispatch();
   const {page} = useParams();
 
-  const state = useSelector(state => state);
-  console.log(state);
-
   const [autoLoadCount, setAutoLoadCount] = useState(1);
   const autoLoadCountRef = useRef(autoLoadCount);
   const searchQuery = useSelector(state => state.search.query);
 
   useEffect(() => {
     if (searchQuery) {
+      dispatch(searchReset());
       dispatch(searchRequest(searchQuery));
-    } else {
-      dispatch(fetchPostsRequest(page));
+      setAutoLoadCount(3);
     }
-  }, [page, searchQuery]);
+  }, [searchQuery]);
+
+  useEffect(() => {
+    dispatch(searchReset());
+    dispatch(fetchPostsRequest(page));
+  }, [page]);
 
   useEffect(() => {
     autoLoadCountRef.current = autoLoadCount;
@@ -39,7 +41,8 @@ export const List = () => {
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting && hasMoreData) {
-        if (searchResults.length) {
+        if (searchQuery) {
+          console.log(2);
           dispatch(searchRequest(searchQuery));
         } else {
           dispatch(fetchPostsRequest(page));
@@ -61,7 +64,7 @@ export const List = () => {
         observer.unobserve(endList.current);
       }
     };
-  }, [endList.current, dispatch, hasMoreData]);
+  }, [endList.current, dispatch, searchQuery, page]);
 
   return (
     <>
@@ -75,8 +78,7 @@ export const List = () => {
         <button
           className={style.loadMoreButton}
           onClick={() => {
-            if (searchResults.length) {
-              console.log(searchQuery);
+            if (searchQuery) {
               dispatch(searchRequest(searchQuery));
             } else {
               dispatch(fetchPostsRequest(page));
@@ -91,4 +93,3 @@ export const List = () => {
     </>
   );
 };
-

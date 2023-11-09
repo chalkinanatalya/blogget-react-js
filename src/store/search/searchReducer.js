@@ -1,12 +1,10 @@
-import {SEARCH_REQUEST, SEARCH_REQUEST_ERROR, SEARCH_REQUEST_SUCCESS} from './saerchAction';
+import {SEARCH_REQUEST, SEARCH_REQUEST_ERROR, SEARCH_REQUEST_SUCCESS, SEARCH_RESET} from './saerchAction';
 
 const initialState = {
   loading: false,
   posts: [],
   error: '',
   after: '',
-  isLast: false,
-  page: '',
   hasMoreData: true,
   query: ''
 };
@@ -34,6 +32,10 @@ export const searchReducer = (state = initialState, action) => {
         ...state,
         loading: false,
         error: action.error
+      };
+    case SEARCH_RESET:
+      return {
+        ...initialState
       };
     default:
       return state;
