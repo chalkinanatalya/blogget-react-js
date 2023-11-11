@@ -36,6 +36,7 @@ const postsSlice = createSlice({
       state.error = action.payload;
     },
     changePage: (state, action) => {
+      state.posts = [];
       state.page = action.payload;
       state.after = '';
       state.isLast = false;
