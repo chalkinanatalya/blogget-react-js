@@ -23,13 +23,14 @@ export const List = () => {
     if (searchQuery) {
       dispatch(searchReset());
       dispatch(searchRequest(searchQuery));
-      setAutoLoadCount(3);
+      setAutoLoadCount(2);
     }
   }, [searchQuery]);
 
   useEffect(() => {
     dispatch(searchReset());
     dispatch(fetchPostsRequest(page));
+    setAutoLoadCount(1);
   }, [page]);
 
   useEffect(() => {
@@ -42,13 +43,12 @@ export const List = () => {
     const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting && hasMoreData) {
         if (searchQuery) {
-          console.log(2);
           dispatch(searchRequest(searchQuery));
         } else {
           dispatch(fetchPostsRequest(page));
         }
         setAutoLoadCount(prev => prev + 1);
-        if (autoLoadCountRef.current >= 3) {
+        if (autoLoadCountRef.current >= 2) {
           observer.unobserve(endList.current);
         }
       }
@@ -74,7 +74,7 @@ export const List = () => {
         }
         <li ref={endList} className={style.end}/>
       </ul>
-      {hasMoreData && autoLoadCountRef.current >= 4 && (
+      {hasMoreData && autoLoadCountRef.current >= 3 && (
         <button
           className={style.loadMoreButton}
           onClick={() => {
